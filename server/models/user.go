@@ -71,7 +71,7 @@ func (user *User) IsAuthor() bool {
 	return false
 }
 
-func (user *User) isAdmin() bool {
+func (user *User) IsAdmin() bool {
 	for _, role := range user.Roles {
 		if role.Name == "ROLE_ADMIN" {
 			return true
@@ -82,5 +82,5 @@ func (user *User) isAdmin() bool {
 }
 
 func (user *User) IsNotAdmin() bool {
-	return !user.isAdmin()
+	return !user.IsAdmin()
 }
