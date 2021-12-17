@@ -6,7 +6,7 @@ import (
 )
 
 func DeleteComment(condition interface{}) error {
-	database := config.ConnectDB()
+	database := config.GetDB()
 	err := database.Where(condition).Delete(models.Comment{}).Error
 
 	return err
@@ -23,7 +23,7 @@ func FetchCommentById(id int, includes ...bool) models.Comment {
 		includeArticle = includes[1]
 	}
 
-	database := config.ConnectDB()
+	database := config.GetDB()
 	var comment models.Comment
 
 	if includeArticle && includeUser {

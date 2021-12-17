@@ -6,7 +6,7 @@ import (
 )
 
 func FetchAllCategories() ([]models.Category, error) {
-	database := config.ConnectDB()
+	database := config.GetDB()
 
 	var categories []models.Category
 	err := database.Find(&categories).Error

@@ -6,7 +6,7 @@ import (
 )
 
 func IsLikedBy(article *models.Article, user models.User) bool {
-	database := config.ConnectDB()
+	database := config.GetDB()
 
 	var favorite models.Like
 	database.Where(models.Like{
@@ -18,7 +18,7 @@ func IsLikedBy(article *models.Article, user models.User) bool {
 }
 
 func LikeArticle(article *models.Article, user models.User) error {
-	database := config.ConnectDB()
+	database := config.GetDB()
 
 	var articleLike models.Like
 	err := database.FirstOrCreate(&articleLike, &models.Like{
@@ -30,7 +30,7 @@ func LikeArticle(article *models.Article, user models.User) error {
 }
 
 func Unlike(article *models.Article, user models.User) error {
-	database := config.ConnectDB()
+	database := config.GetDB()
 
 	err := database.Where(models.Like{
 		ArticleId: article.ID,
@@ -41,7 +41,7 @@ func Unlike(article *models.Article, user models.User) error {
 }
 
 func FetchArticleDetails(condition interface{}, optional ...bool) (models.Article, error) {
-	database := config.ConnectDB()
+	database := config.GetDB()
 
 	var article models.Article
 	tx := database.Begin()
@@ -68,7 +68,7 @@ func FetchArticleDetails(condition interface{}, optional ...bool) (models.Articl
 }
 
 func GetComments(article *models.Article) error {
-	db := config.ConnectDB()
+	db := config.GetDB()
 
 	tx := db.Begin()
 	tx.Model(article).Related(&article.Comments, "Comments")
@@ -81,7 +81,7 @@ func GetComments(article *models.Article) error {
 }
 
 func FetchArticlesPage(page int, pageSize int) ([]models.Article, int, error) {
-	db := config.ConnectDB()
+	db := config.GetDB()
 
 	var articles []models.Article
 	var count int
@@ -103,7 +103,7 @@ func FetchArticlesPage(page int, pageSize int) ([]models.Article, int, error) {
 }
 
 func SetTags(model *models.Article, tags []string) error {
-	db := config.ConnectDB()
+	db := config.GetDB()
 	var tagList []models.Tag
 	for _, tag := range tags {
 		var tagModel models.Tag
@@ -118,17 +118,17 @@ func SetTags(model *models.Article, tags []string) error {
 }
 
 func UpdateArticle(article *models.Article, data interface{}) error {
-	db := config.ConnectDB()
+	db := config.GetDB()
 	err := db.Model(article).Update(data).Error
 	return err
 }
 func DeleteArticle(condition interface{}) error {
-	db := config.ConnectDB()
+	db := config.GetDB()
 	err := db.Where(condition).Delete(models.Article{}).Error
 	return err
 }
 func DeleteArticleIfOwnerOrAdmin(user *models.User, condition interface{}) error {
-	database := config.ConnectDB()
+	database := config.GetDB()
 	var article models.Article
 	err := database.Where(condition).Select("user_id").First(&article).Error
 	if err != nil {
@@ -142,7 +142,7 @@ func DeleteArticleIfOwnerOrAdmin(user *models.User, condition interface{}) error
 
 func FetchArticleId(slug string) (uint, error) {
 	articleId := -1
-	database := config.ConnectDB()
+	database := config.GetDB()
 	err := database.Model(&models.Article{}).
 		Where(&models.Article{Slug: slug}).
 		Select("id").Row().Scan(&articleId)

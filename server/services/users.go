@@ -24,7 +24,7 @@ func SetPassword(user *models.User, password string) error {
 }
 
 func FindOneUser(condition interface{}) (models.User, error) {
-	database := config.ConnectDB()
+	database := config.GetDB()
 	var user models.User
 	err := database.Where(condition).Preload("Roles").First(&user).Error
 
@@ -32,28 +32,28 @@ func FindOneUser(condition interface{}) (models.User, error) {
 }
 
 func CreateOne(data interface{}) error {
-	database := config.ConnectDB()
+	database := config.GetDB()
 	err := database.Create(data).Error
 
 	return err
 }
 
 func SaveOne(data interface{}) error {
-	database := config.ConnectDB()
+	database := config.GetDB()
 	err := database.Save(data).Error
 
 	return err
 }
 
 func UpdateUser(user *models.User, data interface{}) error {
-	database := config.ConnectDB()
+	database := config.GetDB()
 	err := database.Model(user).Update(data).Error
 
 	return err
 }
 
 func Following(user *models.User, v models.User) error {
-	database := config.ConnectDB()
+	database := config.GetDB()
 	var follow models.Subscription
 	err := database.FirstOrCreate(&follow, &models.Subscription{
 		FollowingId: v.ID,
@@ -64,7 +64,7 @@ func Following(user *models.User, v models.User) error {
 }
 
 func IsFollowing(follower *models.User, following models.User) bool {
-	database := config.ConnectDB()
+	database := config.GetDB()
 	var follow models.Subscription
 	database.Where(models.Subscription{
 		FollowingId: following.ID,
@@ -75,7 +75,7 @@ func IsFollowing(follower *models.User, following models.User) bool {
 }
 
 func UnFollowing(follower *models.User, following models.User) error {
-	database := config.ConnectDB()
+	database := config.GetDB()
 	err := database.Where(models.Subscription{
 		FollowingId: following.ID,
 		FollowerId:  follower.ID,
@@ -85,7 +85,7 @@ func UnFollowing(follower *models.User, following models.User) error {
 }
 
 func GetFollowings(user *models.User) []models.User {
-	database := config.ConnectDB()
+	database := config.GetDB()
 	tx := database.Begin()
 	var follows []models.Subscription
 	var followings []models.User
@@ -105,7 +105,7 @@ func GetFollowings(user *models.User) []models.User {
 }
 
 func GetFollowingIds(user *models.User) []uint {
-	database := config.ConnectDB()
+	database := config.GetDB()
 	tx := database.Begin()
 	var users []models.Subscription
 	var followingIds []uint

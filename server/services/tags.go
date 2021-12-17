@@ -6,7 +6,7 @@ import (
 )
 
 func FetchAllTags() ([]models.Tag, error) {
-	database := config.ConnectDB()
+	database := config.GetDB()
 	var tags []models.Tag
 	err := database.Find(&tags).Error
 

@@ -29,7 +29,7 @@ func ListComments(c *gin.Context) {
 	slug := c.Param("slug")
 	var article models.Article
 
-	database := config.ConnectDB()
+	database := config.GetDB()
 	articleId := -1
 	err := database.Model(&article).Where(&models.Article{Slug: slug}).Select("id").Row().Scan(&articleId)
 	if err != nil {
@@ -101,7 +101,7 @@ func DeleteComment(c *gin.Context) {
 
 	id64, err := strconv.ParseUint(c.Param("id"), 10, 32)
 	id := uint(id64)
-	database := config.ConnectDB()
+	database := config.GetDB()
 	var comment models.Comment
 	err = database.Select([]string{"id", "user_id"}).Find(&comment, id).Error
 

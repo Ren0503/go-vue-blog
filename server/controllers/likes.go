@@ -37,7 +37,7 @@ func MyLikes(c *gin.Context) {
 	}
 	var result []models.Like
 	var ids []uint
-	database := config.ConnectDB()
+	database := config.GetDB()
 
 	database.Select("article_id").Where("likes.user_id = ?", currentUserId).Find(&result).Pluck("article_id", &ids)
 
@@ -59,7 +59,7 @@ func MyLikes(c *gin.Context) {
 func LikeArticle(c *gin.Context) {
 	slug := c.Param("slug")
 
-	database := config.ConnectDB()
+	database := config.GetDB()
 	var article models.Article
 	err := database.Model(&models.Article{}).Where("slug = ?", slug).Select([]string{"id", "title"}).First(&article).Error
 	if err != nil {
@@ -88,7 +88,7 @@ func LikeArticle(c *gin.Context) {
 
 func DislikeArticle(c *gin.Context) {
 	slug := c.Param("slug")
-	database := config.ConnectDB()
+	database := config.GetDB()
 	var result struct {
 		Id string
 	}

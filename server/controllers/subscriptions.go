@@ -37,7 +37,7 @@ func ListFollowers(c *gin.Context) {
 		return
 	}
 
-	database := config.ConnectDB()
+	database := config.GetDB()
 	var followerIds []uint
 	var followersCount int
 	var followers []models.User
@@ -55,7 +55,7 @@ func ListFollowing(c *gin.Context) {
 	if err != nil {
 		return
 	}
-	database := config.ConnectDB()
+	database := config.GetDB()
 	var followingIds []uint
 	var followingCount int
 	var following []models.User
@@ -74,7 +74,7 @@ func ListSubscriptions(c *gin.Context) {
 	if err != nil {
 		return
 	}
-	database := config.ConnectDB()
+	database := config.GetDB()
 
 	var userSubscriptionsCount int
 	var following []models.User
@@ -110,7 +110,7 @@ func ListSubscriptions(c *gin.Context) {
 
 func SubscribeToUser(c *gin.Context) {
 	userId, err := strconv.ParseUint(c.Param("id"), 10, 32)
-	database := config.ConnectDB()
+	database := config.GetDB()
 	var followingUser models.User
 	err = database.Model(&models.User{}).Where("id = ?", userId).Select([]string{"id", "username"}).Preload("Roles").First(&followingUser).Error
 	if err != nil {
@@ -151,7 +151,7 @@ func SubscribeToUser(c *gin.Context) {
 
 func UnsubscribeFromUser(c *gin.Context) {
 	userId, err := strconv.ParseUint(c.Param("id"), 10, 32)
-	database := config.ConnectDB()
+	database := config.GetDB()
 	var followingUser models.User
 	err = database.Model(&models.User{}).Where("id = ?", userId).Select([]string{"id", "username"}).First(&followingUser).Error
 	if err != nil {
@@ -190,7 +190,7 @@ func getInfo(c *gin.Context) (uint, int, int, int, error) {
 	offset := (page - 1) * pageSize
 	username := c.Param("username")
 	userIdStr := c.Param("id")
-	database := config.ConnectDB()
+	database := config.GetDB()
 	var userId uint
 	var user models.User
 

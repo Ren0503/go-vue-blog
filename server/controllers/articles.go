@@ -72,7 +72,7 @@ func CreateArticle(c *gin.Context) {
 		return
 	}
 
-	database := config.ConnectDB()
+	database := config.GetDB()
 	tags := make([]models.Tag, len(json.Tags))
 	categories := make([]models.Category, len(json.Categories))
 
@@ -144,7 +144,7 @@ func ArticleFeed(c *gin.Context) {
 }
 
 func GetFeed(user *models.User, limit, offset int) ([]models.Article, int, error) {
-	database := config.ConnectDB()
+	database := config.GetDB()
 	var articles []models.Article
 	var totalArticlesCount int
 

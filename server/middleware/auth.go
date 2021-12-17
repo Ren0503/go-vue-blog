@@ -60,7 +60,7 @@ func UserLoaderMiddleware() gin.HandlerFunc {
 
 						var user models.User
 						if userId != 0 {
-							database := config.ConnectDB()
+							database := config.GetDB()
 							// We always need the Roles to be loaded to make authorization decisions based on Roles
 							database.Preload("Roles").First(&user, userId)
 						}

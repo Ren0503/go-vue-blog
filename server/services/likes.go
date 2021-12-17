@@ -6,7 +6,7 @@ import (
 )
 
 func LikesCount(article *models.Article) uint {
-	database := config.ConnectDB()
+	database := config.GetDB()
 	var count uint
 
 	database.Model(&models.Like{}).Where(models.Like{
