@@ -7,6 +7,7 @@ import (
 	"ren0503/goapi/controllers"
 	"ren0503/goapi/middleware"
 	"ren0503/goapi/models"
+	"ren0503/goapi/seeds"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -93,11 +94,17 @@ func main() {
 
 		if first == "create" {
 			create(database)
+		} else if first == "seed" {
+			seeds.Seed(database)
+			os.Exit(0)
 		} else if first == "migrate" {
 			migrate(database)
 		}
 
-		if first == "migrate" {
+		if second == "seed" {
+			seeds.Seed(database)
+			os.Exit(0)
+		} else if first == "migrate" {
 			migrate(database)
 		}
 
@@ -120,5 +127,5 @@ func main() {
 	controllers.RegisterCategoryRoutes(apiRouteGroup.Group("/categories"))
 	controllers.RegisterUserSubscriptionRoutes(apiRouteGroup.Group("/users"))
 
-	router.Run(":8080")
+	router.Run(":8000")
 }
